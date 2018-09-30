@@ -118,7 +118,11 @@
 		</dependency>        
 	</dependencies>
     <build>
+        	<defaultGoal>install</defaultGoal>
+        
+        
         <plugins>
+        
             <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.9</version>
@@ -153,6 +157,24 @@
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
+            
+            
+             <plugin>
+           <!-- https://mvnrepository.com/artifact/org.apache.tomcat.maven/tomcat7-maven-plugin -->
+    <groupId>org.apache.tomcat.maven</groupId>
+    <artifactId>tomcat7-maven-plugin</artifactId>
+    <version>2.2</version>
+            <configuration>
+                <url>http://localhost:8080/manager/text</url>
+							<server>TomcatServer</server>
+                             <path>/jenkinsTest</path>
+                             <username>admin</username>
+                             <password>admin</password>
+					
+            </configuration>
+        </plugin>
+            
+            
         </plugins>
     </build>
 </project>
