@@ -68,7 +68,7 @@ function getMeal(dateStr){
 	console.log("datastr.." + dateStr);
 	let host = "http://www.dreamforone.com/~wy/api/get_data.php";
 	let param = new Object();
-	param.store = "dawn";
+	param.store = "dawa";
 	param.new = 1;
 	param.selectday = dateStr;
 	//selectday=2019-01-15&store=dawa&new=1
