@@ -139,7 +139,7 @@ body {
 
 		$.ajax({
 
-			url : "/jenkins/search",
+			url : "/jenkinsTest/search",
 			type : "GET",
 			data : {
 				date : paramDate.getTime()
