@@ -56,6 +56,7 @@ public class HomeController {
 		Date dateObj = new Date(date);
 		String dateStr = DATE_FORMAT.format(dateObj);
 		Map<String, String> result = null;
+
 		if (mealCache.containsKey(dateStr)) {
 			return mealCache.get(dateStr);
 		} else {
@@ -70,5 +71,17 @@ public class HomeController {
 		return result;
 
 	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value="checkCache")
+	public Map<String, Map<String, String>> getCache(){
+		
+		logger.info("cache.. ");
+		System.out.println(mealCache);
+		return mealCache;
+		
+	}
+	
 
 }

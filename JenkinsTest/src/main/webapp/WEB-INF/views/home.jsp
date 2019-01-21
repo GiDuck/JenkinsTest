@@ -123,10 +123,8 @@ body {
 
 		let dateStr;
 		let year = date.getFullYear();
-		let month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : "0"
-				+ (date.getMonth() + 1);
-		let day = date.getDate() + 1 > 9 ? date.getDate() : "0"
-				+ (date.getDate());
+		let month = (date.getMonth() + 1) > 9 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1);
+		let day = (date.getDate() + 1) > 9 ? date.getDate() : "0" + (date.getDate());
 		dateStr = year + "-" + month + "-" + day;
 
 		return dateStr;
@@ -174,7 +172,6 @@ body {
 			$lunchField.empty();
 			for (let i = 0; i < lunchArr.length; ++i) {
 
-				console.log(lunchArr[i]);
 				$lunchField.append($("<li>").html(lunchArr[i]));
 
 			}
@@ -185,7 +182,6 @@ body {
 
 			$dinnerField.empty();
 			for (let i = 0; i < dinnerArr.length; ++i) {
-				console.log(dinnerArr[i]);
 				$dinnerField.append($("<li>").html(dinnerArr[i]));
 			
 
