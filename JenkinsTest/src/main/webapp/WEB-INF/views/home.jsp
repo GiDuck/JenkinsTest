@@ -147,6 +147,8 @@ body {
 				let lunchArr = JSON.parse(response["lunch"]);
 				let dinnerArr = JSON.parse(response["dinner"]);
 				selectedDateStr = dateFormatter(paramDate);
+				selectedDateStr += (" " + paramDate.getDayToKR());
+
 				$("#today").html(selectedDateStr);
 
 				renderScreen(lunchArr, dinnerArr);
@@ -154,7 +156,8 @@ body {
 			},
 			error : function(xhs, status, error) {
 
-				alert("데이터를 받아오는데 실패하였습니다.. status.. " + status);
+				console.log("데이터를 받아오는데 실패하였습니다.. status.. " + status);
+				alert("Data load fail");
 
 			}
 
@@ -196,8 +199,15 @@ body {
 
 	$(document).ready(function() {
 
+		Date.prototype.weekdayKR = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+		Date.prototype.getDayToKR = function(){
+			return this.weekdayKR[this.getDay()];
+			
+		};
+		
 		today = new Date();
 		todayStr = dateFormatter(today);
+		todayStr += (" " + today.getDayToKR());
 		$("#today").html(todayStr);
 		getMeal(today);
 

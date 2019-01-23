@@ -1,7 +1,7 @@
 package com.bufs.jenkins;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +32,7 @@ public class CrawlingService {
 	//셀레늄을 사용하기 위한 웹 드라이버
 	private WebDriver driver;
 	
-	public Map<String, String> crawlMealTable(Date date) {
+	public Map<String, String> crawlMealTable(LocalDate date) {
 		
 		//크롬 드라이버로 설정
 		ChromeOptions chromeOptions = new ChromeOptions();
@@ -66,8 +66,16 @@ public class CrawlingService {
 			String[] lunchMenu = params.get("wr_1").split("\\r");
 			String[] dinnerMenu = params.get("wr_2").split("\\r");;
 			
+			params = new HashMap<String, String>();
 			params.put("lunch", mapper.writeValueAsString(lunchMenu));
 			params.put("dinner", mapper.writeValueAsString(dinnerMenu));
+
+			if("미등록".equals(lunchMenu[0])) {
+				params.put("isWork", "false");
+			}else {
+				params.put("isWork", "true");
+
+			}
 
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block

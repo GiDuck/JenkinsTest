@@ -1,7 +1,9 @@
 package com.bufs.jenkins;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +28,7 @@ public class HomeController {
 	private CrawlingService service;
 
 	private static Map<String, Map<String, String>> mealCache = null;
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model) {
@@ -42,29 +44,56 @@ public class HomeController {
 
 	public void setChache() {
 
-		Date now = new Date();
-		mealCache.put(DATE_FORMAT.format(now), service.crawlMealTable(now));
-
+		LocalDate now = LocalDate.now();
+		synchronized (this) {
+			mealCache.put(DATE_FORMAT.format(now), service.crawlMealTable(now));
+		}
 	}
 
 	@ResponseBody
 	@RequestMapping(value="/search")
 	public Map<String, String> search(@RequestParam(name = "date") Long date) {
 
-		Date dateObj = new Date(date);
-		String dateStr = DATE_FORMAT.format(dateObj);
+		LocalDate dateObj = Instant.ofEpochMilli(date).atZone(ZoneId.systemDefault()).toLocalDate();
+		String dateStr = dateObj.format(DATE_FORMAT);
 		Map<String, String> result = null;
 
+		boolean isWeekDay = dateObj.getDayOfWeek().getValue() >= 1 && dateObj.getDayOfWeek().getValue() <= 5; 
+
 		if (mealCache.containsKey(dateStr)) {
-			return mealCache.get(dateStr);
+			
+			result = mealCache.get(dateStr);
+			
+
+			if(isWeekDay && "false".equals(result.get("isWork"))) {
+			
+				result = service.crawlMealTable(dateObj);
+
+				if(result != null) {
+					
+					synchronized (this) {
+						mealCache.put(dateStr, result);
+					}
+
+				}
+				
+			}
+			
+			return result;
+
+		
 		} else {
 			result = service.crawlMealTable(dateObj);
 			if(result != null) {
-				mealCache.put(dateStr, result);
+				
+				synchronized (this) {
+					mealCache.put(dateStr, result);
+				}
 
 			}
 
 		}
+		
 
 		return result;
 
